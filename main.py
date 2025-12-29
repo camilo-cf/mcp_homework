@@ -12,6 +12,7 @@ import requests
 import zipfile
 from pathlib import Path
 import minsearch
+import json
 
 # Constants
 REQUEST_TIMEOUT = 30  # seconds
@@ -22,6 +23,7 @@ mcp = FastMCP("MCP Homework")
 
 # Global index cache
 _index = None
+
 
 
 class FetchError(Exception):
@@ -136,7 +138,7 @@ def _add(a: int, b: int) -> int:
     return a + b
 
 
-@mcp.tool
+@mcp.tool()
 def add(a: int, b: int) -> int:
     """Add two numbers.
     
@@ -150,7 +152,7 @@ def add(a: int, b: int) -> int:
     return _add(a, b)
 
 
-@mcp.tool
+@mcp.tool()
 def fetch_page_content(url: str) -> str:
     """Fetch content of a web page using Jina reader.
     
@@ -163,17 +165,11 @@ def fetch_page_content(url: str) -> str:
     return _fetch_page_content(url)
 
 
-@mcp.tool
-def search(query: str) -> list[dict]:
-    """Search FastMCP documentation for relevant documents.
-    
-    Args:
-        query: The search query.
-    
-    Returns:
-        List of up to 5 most relevant documents with filename and content.
-    """
-    return _search(query, top_k=5)
+@mcp.tool()
+def search(query: str) -> str:
+    """Search docs."""
+    results = _search(query, top_k=5)
+    return json.dumps(results)
 
 
 if __name__ == "__main__":
