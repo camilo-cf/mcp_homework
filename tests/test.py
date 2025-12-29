@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(0, '..')
 from main import _fetch_page_content
 
 def main():

@@ -29,8 +29,8 @@ uv run main.py
 
 ```bash
 # Test page fetching
-uv run test.py
+cd tests && uv run test.py
 
 # Test search
-uv run search.py
+cd tests && uv run search.py
 ```
