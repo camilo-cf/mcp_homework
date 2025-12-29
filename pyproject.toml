@@ -1,11 +1,17 @@
 [project]
 name = "mcp-homework"
 version = "0.1.0"
-description = "Add your description here"
+description = "MCP server with page fetching and search tools"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "fastmcp>=2.14.1",
     "requests",
     "minsearch",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov",
 ]
