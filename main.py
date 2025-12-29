@@ -166,9 +166,38 @@ def fetch_page_content(url: str) -> str:
 
 
 @mcp.tool()
-def search(query: str) -> str:
-    """Search docs."""
-    results = _search(query, top_k=5)
+def search(query: str, top_k: int = 5) -> str:
+    """Search FastMCP documentation.
+    
+    Args:
+        query: Search query
+        top_k: Number of results to return (default: 5)
+    """
+    results = _search(query, top_k=top_k)
+    return json.dumps(results)
+
+
+@mcp.tool()
+def search_page(url: str, query: str, top_k: int = 5) -> str:
+    """Search content of a specific web page.
+    
+    Args:
+        url: The URL of the page to search
+        query: Search query
+        top_k: Number of results to return (default: 5)
+    """
+    content = _fetch_page_content(url)
+    
+    # Split content into chunks (simple paragraph splitting)
+    chunks = [p.strip() for p in content.split('\n\n') if p.strip()]
+    
+    # Index chunks
+    docs = [{'content': chunk, 'filename': f"{url}#chunk{i}"} for i, chunk in enumerate(chunks)]
+    
+    temp_index = minsearch.Index(text_fields=['content'], keyword_fields=['filename'])
+    temp_index.fit(docs)
+    
+    results = temp_index.search(query, num_results=top_k)
     return json.dumps(results)
 
 
